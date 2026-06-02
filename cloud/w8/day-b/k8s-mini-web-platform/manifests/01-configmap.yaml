@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: student-web-content
+  namespace: day-b
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="vi">
+    <head>
+      <meta charset="UTF-8">
+      <title>W8 Day B - Kubernetes Mini Platform</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          max-width: 760px;
+          margin: 60px auto;
+          padding: 30px;
+          background: #f4f7fb;
+          color: #1f2937;
+        }
+        .card {
+          background: white;
+          padding: 32px;
+          border-radius: 14px;
+          box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+        }
+        h1 { color: #2563eb; }
+        code {
+          background: #eef2ff;
+          padding: 3px 7px;
+          border-radius: 4px;
+        }
+        li { margin: 10px 0; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h1>Mini K8s Web Platform</h1>
+        <p><strong>Student:</strong> Le Hoang Viet</p>
+        <p><strong>Phase 2 - W8 Day B:</strong> Kubernetes Container & Orchestration</p>
+        <hr>
+        <h2>Concepts demonstrated</h2>
+        <ul>
+          <li>Deployment quản lý Pod chạy container <code>nginx</code></li>
+          <li>Service kiểu <code>NodePort</code> expose ứng dụng</li>
+          <li>ConfigMap cung cấp nội dung website</li>
+          <li>Secret truyền cấu hình nhạy cảm giả lập</li>
+          <li>Liveness và Readiness Probes kiểm tra health</li>
+          <li>NetworkPolicy định nghĩa giới hạn traffic</li>
+        </ul>
+        <p>Website này đang được phục vụ từ một Pod trong cluster minikube local.</p>
+      </div>
+    </body>
+    </html>

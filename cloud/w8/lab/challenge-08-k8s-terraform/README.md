@@ -266,6 +266,5 @@ terraform state list
 
 ## Evidence
 
-* Browser screenshot showing the public ALB URL and successful application page: `evidence/alb-browser-success.png`
-* Kubernetes and bootstrap verification were completed before cleanup.
+* Browser screenshot showing the public ALB URL and successful application page: `evidence/Screenshot 2026-06-04 172354.png`
 

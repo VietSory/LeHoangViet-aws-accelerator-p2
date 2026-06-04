@@ -1,0 +1,75 @@
+#!/bin/bash
+set -euxo pipefail
+
+exec > >(tee /var/log/challenge-bootstrap.log | logger -t challenge-bootstrap -s 2>/dev/console) 2>&1
+
+export DEBIAN_FRONTEND=noninteractive
+
+echo "=== Challenge 08 bootstrap started ==="
+
+apt-get update -y
+apt-get install -y \
+  ca-certificates \
+  curl \
+  docker.io \
+  conntrack \
+  jq
+
+systemctl enable --now docker
+
+# Ubuntu AWS AMIs commonly include SSM Agent as a Snap package.
+# Start it when available so the instance can be managed without SSH.
+systemctl enable --now snap.amazon-ssm-agent.amazon-ssm-agent.service || true
+snap start amazon-ssm-agent || true
+
+# Allow the default Ubuntu user to operate Docker and minikube.
+usermod -aG docker ubuntu
+
+# Install kubectl from the latest stable Kubernetes release.
+KUBECTL_VERSION="$(curl -fsSL https://dl.k8s.io/release/stable.txt)"
+curl -fsSLo /tmp/kubectl \
+  "https://dl.k8s.io/release/$${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+install -o root -g root -m 0755 /tmp/kubectl /usr/local/bin/kubectl
+
+# Install minikube.
+curl -fsSLo /tmp/minikube-linux-amd64 \
+  https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+install -o root -g root -m 0755 /tmp/minikube-linux-amd64 /usr/local/bin/minikube
+
+# Write Kubernetes manifests rendered by Terraform.
+install -d -o ubuntu -g ubuntu /opt/challenge/k8s
+
+echo "${configmap_b64}" | base64 -d > /opt/challenge/k8s/configmap.yaml
+echo "${deployment_b64}" | base64 -d > /opt/challenge/k8s/deployment.yaml
+echo "${service_b64}" | base64 -d > /opt/challenge/k8s/service.yaml
+
+chown -R ubuntu:ubuntu /opt/challenge
+
+# Create a single-node Kubernetes cluster inside Docker.
+# Publish the future NodePort from the minikube container to the EC2 host.
+sudo -u ubuntu -H minikube start \
+  --driver=docker \
+  --cpus=2 \
+  --memory=2600mb \
+  --ports=${node_port}:${node_port} \
+  --listen-address=0.0.0.0 \
+  --wait=all \
+  --wait-timeout=10m
+
+# Deploy the application into Kubernetes.
+sudo -u ubuntu -H kubectl apply -f /opt/challenge/k8s/configmap.yaml
+sudo -u ubuntu -H kubectl apply -f /opt/challenge/k8s/deployment.yaml
+sudo -u ubuntu -H kubectl apply -f /opt/challenge/k8s/service.yaml
+
+sudo -u ubuntu -H kubectl rollout status deployment/web --timeout=180s
+sudo -u ubuntu -H kubectl get deploy,pods,svc -o wide > /opt/challenge/k8s-status.txt
+
+# Verify the port exposed on the EC2 host returns the application page.
+curl --retry 20 --retry-delay 5 --retry-all-errors \
+  --fail --silent --show-error \
+  "http://127.0.0.1:${node_port}/" \
+  > /opt/challenge/verification.html
+
+touch /opt/challenge/bootstrap-success
+
+echo "=== Challenge 08 bootstrap completed successfully ==="

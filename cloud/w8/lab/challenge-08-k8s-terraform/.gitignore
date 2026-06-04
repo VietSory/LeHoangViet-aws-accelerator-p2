@@ -1,0 +1,23 @@
+# Terraform generated files
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Variable values may contain sensitive data
+*.tfvars
+*.tfvars.json
+
+# Local override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+
+# Saved Terraform plan files
+tfplan
+*.tfplan
+plan-*.txt
+destroy*.tfplan

@@ -1,0 +1,4 @@
+aws_region    = "ap-southeast-1"
+project_name  = "viet-k8s-challenge08"
+instance_type = "c7i-flex.large"
+node_port     = 30080

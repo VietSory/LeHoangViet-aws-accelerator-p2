@@ -15,3 +15,5 @@ ec2_instance_type = "t3.micro"
 
 rds_instance_class = "db.t3.micro"
 rds_multi_az       = false
+
+static_assets_bucket_prefix = "hviet-w8-static-assets-"

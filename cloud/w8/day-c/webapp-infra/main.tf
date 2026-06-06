@@ -35,3 +35,10 @@ module "rds" {
   instance_class       = var.rds_instance_class
   multi_az             = var.rds_multi_az
 }
+
+module "s3" {
+  source = "./modules/s3"
+
+  project_name  = var.project_name
+  bucket_prefix = var.static_assets_bucket_prefix
+}

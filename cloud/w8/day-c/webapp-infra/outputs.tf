@@ -68,3 +68,13 @@ output "rds_secret_arn" {
   value       = module.rds.db_secret_arn
   sensitive   = true
 }
+
+output "static_assets_bucket" {
+  description = "S3 bucket storing static assets"
+  value       = module.s3.bucket_name
+}
+
+output "static_asset_object" {
+  description = "Sample static asset object key"
+  value       = module.s3.project_info_key
+}

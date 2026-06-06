@@ -69,3 +69,9 @@ variable "rds_multi_az" {
   type        = bool
   default     = false
 }
+
+variable "static_assets_bucket_prefix" {
+  description = "Prefix for globally unique S3 bucket storing static assets"
+  type        = string
+  default     = "hviet-w8-static-assets-"
+}

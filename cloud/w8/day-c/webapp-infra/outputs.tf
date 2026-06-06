@@ -22,3 +22,28 @@ output "private_route_table_id" {
   description = "Private route table ID"
   value       = module.vpc.private_route_table_id
 }
+
+output "web_security_group_id" {
+  description = "Security group ID for EC2 web server"
+  value       = module.security_groups.web_security_group_id
+}
+
+output "db_security_group_id" {
+  description = "Security group ID for RDS database"
+  value       = module.security_groups.db_security_group_id
+}
+
+output "web_instance_id" {
+  description = "EC2 web server instance ID"
+  value       = module.ec2.instance_id
+}
+
+output "web_public_ip" {
+  description = "Public IP address of EC2 web server"
+  value       = module.ec2.public_ip
+}
+
+output "website_url" {
+  description = "URL of the deployed EC2 web server"
+  value       = "http://${module.ec2.public_ip}"
+}

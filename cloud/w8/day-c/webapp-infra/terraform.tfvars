@@ -10,3 +10,5 @@ private_db_subnet_b_cidr = "10.20.12.0/24"
 
 availability_zone_a = "ap-southeast-1a"
 availability_zone_b = "ap-southeast-1b"
+
+ec2_instance_type = "t3.micro"

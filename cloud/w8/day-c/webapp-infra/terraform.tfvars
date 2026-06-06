@@ -12,3 +12,6 @@ availability_zone_a = "ap-southeast-1a"
 availability_zone_b = "ap-southeast-1b"
 
 ec2_instance_type = "t3.micro"
+
+rds_instance_class = "db.t3.micro"
+rds_multi_az       = false

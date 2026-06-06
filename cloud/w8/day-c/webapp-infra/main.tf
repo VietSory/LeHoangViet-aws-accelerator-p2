@@ -25,3 +25,13 @@ module "ec2" {
   security_group_id = module.security_groups.web_security_group_id
   instance_type     = var.ec2_instance_type
 }
+
+module "rds" {
+  source = "./modules/rds"
+
+  project_name         = var.project_name
+  private_subnet_ids   = module.vpc.private_db_subnet_ids
+  db_security_group_id = module.security_groups.db_security_group_id
+  instance_class       = var.rds_instance_class
+  multi_az             = var.rds_multi_az
+}

@@ -57,3 +57,15 @@ variable "ec2_instance_type" {
   type        = string
   default     = "t3.micro"
 }
+
+variable "rds_instance_class" {
+  description = "RDS instance class for MySQL database"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "rds_multi_az" {
+  description = "Whether RDS should run in Multi-AZ mode"
+  type        = bool
+  default     = false
+}

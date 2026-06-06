@@ -47,3 +47,24 @@ output "website_url" {
   description = "URL of the deployed EC2 web server"
   value       = "http://${module.ec2.public_ip}"
 }
+
+output "rds_instance_id" {
+  description = "RDS MySQL instance ID"
+  value       = module.rds.db_instance_id
+}
+
+output "rds_endpoint" {
+  description = "Private RDS MySQL endpoint"
+  value       = module.rds.db_endpoint
+}
+
+output "rds_subnet_group_name" {
+  description = "RDS DB subnet group name"
+  value       = module.rds.db_subnet_group_name
+}
+
+output "rds_secret_arn" {
+  description = "Secrets Manager ARN containing RDS master credentials"
+  value       = module.rds.db_secret_arn
+  sensitive   = true
+}

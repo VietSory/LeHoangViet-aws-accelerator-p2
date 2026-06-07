@@ -550,22 +550,3 @@ yes
 The backend resources in `bootstrap-backend` should only be destroyed after all evidence and review are complete.
 
 ---
-
-## 12. Lessons Learned
-
-From this project, I learned how to:
-
-- Use Terraform to provision AWS infrastructure
-- Organize Terraform code into reusable modules
-- Use Terraform outputs to expose important resource information
-- Use remote state with S3
-- Use DynamoDB locking for state safety
-- Deploy an EC2 web server using user data
-- Place a database in private subnet infrastructure
-- Restrict access using Security Groups
-- Use S3 as private static asset storage
-- Verify infrastructure using Terraform outputs and AWS CLI
-
-The most important learning point was understanding that Terraform state is critical. It is not just a generated file; it is the source Terraform uses to understand what it manages.
-
-Another important point was understanding the difference between RDS Single-AZ and an RDS DB subnet group. The database can be Single-AZ while the subnet group still contains subnets in multiple Availability Zones.

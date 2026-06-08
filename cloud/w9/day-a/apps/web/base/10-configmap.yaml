@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-index
+  namespace: gitops-demo
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>W9 Day A GitOps CI/CD</title>
+    </head>
+    <body>
+      <h1>W9 Day A — End-to-End GitOps CI/CD</h1>
+      <p>This application is managed by GitHub Actions and ArgoCD.</p>
+      <p>Version: v1</p>
+    </body>
+    </html>

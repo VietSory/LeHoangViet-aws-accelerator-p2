@@ -1,0 +1,32 @@
+name: W9 Day A K8s Manifest Check
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "cloud/w9/day-a/apps/**"
+      - "cloud/w9/day-a/argocd/**"
+
+  push:
+    branches:
+      - main
+    paths:
+      - "cloud/w9/day-a/apps/**"
+      - "cloud/w9/day-a/argocd/**"
+
+jobs:
+  kustomize-check:
+    name: Kustomize render check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Render web dev overlay
+        run: |
+          kubectl kustomize cloud/w9/day-a/apps/web/overlays/dev

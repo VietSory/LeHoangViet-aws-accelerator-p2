@@ -1,0 +1,65 @@
+name: W9 Day A Terraform Plan Apply
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "cloud/w9/day-a/infra/terraform/**"
+
+  push:
+    branches:
+      - main
+    paths:
+      - "cloud/w9/day-a/infra/terraform/**"
+
+jobs:
+  terraform-plan:
+    name: Terraform plan on PR
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: cloud/w9/day-a/infra/terraform
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform fmt check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform plan
+        run: terraform plan -no-color
+
+  terraform-apply:
+    name: Terraform apply on merge to main
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: cloud/w9/day-a/infra/terraform
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform apply
+        run: terraform apply -auto-approve

@@ -1,0 +1,118 @@
+groups:
+  - name: student-web-api-slo
+    rules:
+      - alert: StudentWebApiAvailabilityBurnFast
+        expr: |
+          (
+            (
+              sum(rate(http_requests_total{service="student-web-api",status=~"5.."}[1h]))
+              /
+              sum(rate(http_requests_total{service="student-web-api"}[1h]))
+            ) / 0.01 > 14.4
+          )
+          and
+          (
+            (
+              sum(rate(http_requests_total{service="student-web-api",status=~"5.."}[5m]))
+              /
+              sum(rate(http_requests_total{service="student-web-api"}[5m]))
+            ) / 0.01 > 14.4
+          )
+        for: 2m
+        labels:
+          severity: page
+          service: student-web-api
+          slo: availability
+        annotations:
+          summary: "Availability SLO burn rate is high"
+          description: "Fast burn-rate alert: 1h and 5m windows are both burning error budget too quickly."
+
+      - alert: StudentWebApiAvailabilityBurnSlow
+        expr: |
+          (
+            (
+              sum(rate(http_requests_total{service="student-web-api",status=~"5.."}[6h]))
+              /
+              sum(rate(http_requests_total{service="student-web-api"}[6h]))
+            ) / 0.01 > 6
+          )
+          and
+          (
+            (
+              sum(rate(http_requests_total{service="student-web-api",status=~"5.."}[30m]))
+              /
+              sum(rate(http_requests_total{service="student-web-api"}[30m]))
+            ) / 0.01 > 6
+          )
+        for: 15m
+        labels:
+          severity: ticket
+          service: student-web-api
+          slo: availability
+        annotations:
+          summary: "Availability SLO burn rate is steadily high"
+          description: "Slow burn-rate alert: 6h and 30m windows are both burning error budget."
+
+      - alert: StudentWebApiLatencyBurnFast
+        expr: |
+          (
+            (
+              1 -
+              (
+                sum(rate(http_request_duration_seconds_bucket{service="student-web-api",le="0.3"}[1h]))
+                /
+                sum(rate(http_request_duration_seconds_count{service="student-web-api"}[1h]))
+              )
+            ) / 0.05 > 14.4
+          )
+          and
+          (
+            (
+              1 -
+              (
+                sum(rate(http_request_duration_seconds_bucket{service="student-web-api",le="0.3"}[5m]))
+                /
+                sum(rate(http_request_duration_seconds_count{service="student-web-api"}[5m]))
+              )
+            ) / 0.05 > 14.4
+          )
+        for: 2m
+        labels:
+          severity: page
+          service: student-web-api
+          slo: latency
+        annotations:
+          summary: "Latency SLO burn rate is high"
+          description: "Fast burn-rate alert: too many requests are slower than 300ms."
+
+      - alert: StudentWebApiLatencyBurnSlow
+        expr: |
+          (
+            (
+              1 -
+              (
+                sum(rate(http_request_duration_seconds_bucket{service="student-web-api",le="0.3"}[6h]))
+                /
+                sum(rate(http_request_duration_seconds_count{service="student-web-api"}[6h]))
+              )
+            ) / 0.05 > 6
+          )
+          and
+          (
+            (
+              1 -
+              (
+                sum(rate(http_request_duration_seconds_bucket{service="student-web-api",le="0.3"}[30m]))
+                /
+                sum(rate(http_request_duration_seconds_count{service="student-web-api"}[30m]))
+              )
+            ) / 0.05 > 6
+          )
+        for: 15m
+        labels:
+          severity: ticket
+          service: student-web-api
+          slo: latency
+        annotations:
+          summary: "Latency SLO burn rate is steadily high"
+          description: "Slow burn-rate alert: latency SLO is being consumed over longer windows."
